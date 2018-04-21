@@ -21,3 +21,5 @@ spring:
     jackson:
         mapper:
             ACCEPT_CASE_INSENSITIVE_ENUMS: true
+        deserialization:
+            FAIL_ON_UNKNOWN_PROPERTIES: false
