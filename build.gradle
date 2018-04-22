@@ -1,0 +1,40 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'idea'
+    id 'io.spring.dependency-management' version '1.0.5.RELEASE'
+    id 'org.springframework.boot' version '2.0.1.RELEASE'
+}
+
+sourceCompatibility = 1.8
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    runtime 'org.springframework.boot:spring-boot-devtools'
+
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+    
+    compile 'com.google.guava:guava:24.1-jre'
+    compile "org.glassfish.jersey.core:jersey-client:2.27"
+    compile "org.glassfish.jersey.core:jersey-common:2.27"
+    compile "org.glassfish.jersey.inject:jersey-hk2:2.27"
+    compile "org.glassfish.jersey.media:jersey-media-json-jackson:2.27"
+    
+    // java 9 and java 10 need these dependencies
+    compile "javax.xml.bind:jaxb-api:2.3.0"
+    compile "javax.activation:activation:1.1.1"
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.6'
+}

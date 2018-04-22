@@ -1,0 +1,28 @@
+server:
+    port: 8090
+
+pokerwars:
+    bot:
+        username: insert-your-pokerwars-username-here
+        token: insert-your-pokerwars-token-here
+        # make sure your bot can be seen from external at the IP and port you specify below, so pokerwars.io can talk to him/her.
+        # this is an useful service to double check this: http://canyouseeme.org/ . Bot default port is `8090`, but you can change this just above in this file
+        endpoint: http://insert-your-publicly-available-bot-IP-address-here
+        # options are ALWAYS_FOLD, ALWAYS_CALL or RANDOM, implement your own strategy!
+        strategy: RANDOM
+        # pokerwars can send you notifications to know how your bot is doing
+        notifications: false
+    server: https://play.pokerwars.io
+
+logging:
+    file: logs/pokerwars.io-starterbot-java.log
+    level:
+        io.pokerwars: info        
+
+spring:
+    jackson:
+        mapper:
+            ACCEPT_CASE_INSENSITIVE_PROPERTIES: true
+            ACCEPT_CASE_INSENSITIVE_ENUMS: true
+        deserialization:
+            FAIL_ON_UNKNOWN_PROPERTIES: false
