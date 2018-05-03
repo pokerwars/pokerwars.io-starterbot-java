@@ -60,7 +60,6 @@ public class PokerwarsService {
       LOG.error("Your bot did NOT subscribe succesfully! Reason: {} - {}, {}", statusCode,
           reasonPhrase, reason);
       LOG.info("Fix the reported error and retry.");
-      System.exit(-1);
     }
   }
 

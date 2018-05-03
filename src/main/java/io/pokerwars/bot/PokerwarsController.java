@@ -93,20 +93,6 @@ public class PokerwarsController {
     }
   }
 
-  @GetMapping("subscribe")
-  @ResponseStatus(HttpStatus.OK)
-  public void subscribe() {
-    // This endpoint can be used by pokerwars.io to resubscribe your bot in exceptional situations
-    LOG.info("Trying to subscribe to pokerwars.io...");
-    try {
-      pokerwarsService.subscribeBotToPokerwars();
-      LOG.info("Subscribed successfully!");
-    } catch (Exception e) {
-      LOG.error("Unable to subscribe to pokerwars.io :( check the stacktrace for more info", e);
-      System.exit(-1);
-    }
-  }
-
   @GetMapping("ping")
   public ResponseEntity<Pong> ping() {
     // This is used by pokerwars.io when your bot subscribe to verify that is alive and responding

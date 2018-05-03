@@ -4,7 +4,7 @@ This is a simple example of how you could implement a pokerwars.io bot with Java
 
 ## Quick start
 A few requirements to play:
-- have Java 8 or newer installed
+- have [Java 8 JDK](http://www.oracle.com/technetwork/java/javase/downloads) or newer installed
 - make sure that the computer where your bot runs is visible from the internet, so we can communicate with him/her. [This is an useful service](http://canyouseeme.org/) to double check this. Bot default port is `8090`, but you can change this on the `src/main/resources/application.yml` file. If you need help to open a port on your router [check this guide](https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/) or [contact us](mailto:contact@pokerwars.io). We are always willing to help you.
 - [Register with us](https://www.pokerwars.io/) and retrieve your [API token](https://www.pokerwars.io/token) and [username](https://www.pokerwars.io/profile).
 - check out this repo with git or download it from [this link](https://github.com/pokerwars/pokerwars.io-starterbot-java/archive/master.zip).
