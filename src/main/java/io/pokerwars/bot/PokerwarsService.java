@@ -16,8 +16,8 @@ public class PokerwarsService {
 
   private static final Logger LOG = LoggerFactory.getLogger(PokerwarsService.class);
 
-  private static final String POKERWARS_SERVER_PATH = "/v1/pokerwars";
-  private static final String POKERWARS_SUBSCRIBE_PATH = "/subscribe";
+  private static final String POKERWARS_SERVER = "https://play.pokerwars.io";
+  private static final String POKERWARS_SUBSCRIBE_PATH = "/v1/pokerwars/subscribe";
 
   @Value("${pokerwars.bot.username}")
   private String yourBotUsername;
@@ -31,12 +31,6 @@ public class PokerwarsService {
   @Value("${pokerwars.bot.notifications}")
   private Boolean notifications;
 
-  @Value("${server.port}")
-  private String yourBotPort;
-
-  @Value("${pokerwars.server}")
-  private String pokerwarsServer;
-
   private Client restClient;
 
   public PokerwarsService(Client restClient) {
@@ -44,8 +38,7 @@ public class PokerwarsService {
   }
 
   public void subscribeBotToPokerwars() {
-    String yourBotAddress = yourBotEndpoint + ":" + yourBotPort;
-    YourBot yourBot = new YourBot(yourBotUsername, yourBotToken, yourBotAddress, notifications);
+    YourBot yourBot = new YourBot(yourBotUsername, yourBotToken, yourBotEndpoint, notifications);
     Response pokerwarsResponse = callPokerwarsSubscribeEndpoint(yourBot);
     StatusType statusInfo = pokerwarsResponse.getStatusInfo();
 
@@ -64,10 +57,10 @@ public class PokerwarsService {
   }
 
   private Response callPokerwarsSubscribeEndpoint(YourBot yourBot) {
-    LOG.info("Trying to subscribe your bot {} to pokerwars.io, calling {}{}{}", yourBot,
-        pokerwarsServer, POKERWARS_SERVER_PATH, POKERWARS_SUBSCRIBE_PATH);
-    return restClient.target(pokerwarsServer).path(POKERWARS_SERVER_PATH)
-        .path(POKERWARS_SUBSCRIBE_PATH).request().post(Entity.json(yourBot));
+    LOG.info("Trying to subscribe your bot {} to pokerwars.io, calling {}{}", yourBot,
+        POKERWARS_SERVER, POKERWARS_SUBSCRIBE_PATH);
+    return restClient.target(POKERWARS_SERVER).path(POKERWARS_SUBSCRIBE_PATH).request()
+        .post(Entity.json(yourBot));
   }
 
 }
