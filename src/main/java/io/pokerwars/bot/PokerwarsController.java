@@ -27,12 +27,6 @@ public class PokerwarsController {
   @Value("${pokerwars.bot.strategy}")
   private PokerStrategy pokerStrategy;
 
-  private PokerwarsService pokerwarsService;
-
-  public PokerwarsController(PokerwarsService pokerwarsService) {
-    this.pokerwarsService = pokerwarsService;
-  }
-
   @PostMapping("play")
   public ResponseEntity<PokerAction> play(@RequestBody GameInfo gameInfo) {
     // This endpoint is called by pokerwars.io to request your bot next move on a tournament.
