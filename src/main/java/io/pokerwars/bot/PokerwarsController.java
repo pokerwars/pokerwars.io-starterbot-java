@@ -5,8 +5,10 @@ import io.pokerwars.bot.model.in.Notification;
 import io.pokerwars.bot.model.out.Pong;
 import io.pokerwars.bot.model.out.actions.PokerAction;
 import io.pokerwars.bot.strategies.PokerStrategy;
+import io.pokerwars.bot.strategies.StrategyConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +26,17 @@ public class PokerwarsController {
   private static final Logger LOG = LoggerFactory.getLogger(PokerwarsController.class);
 
   // you can select your strategy in the application.yml file
-  @Value("${pokerwars.bot.strategy}")
+  @Value("${pokerwars.bot.strategy.type}")
   private PokerStrategy pokerStrategy;
+
+  @Autowired
+  private StrategyConfig strategyConfig;
+
+  private PokerwarsService pokerwarsService;
+
+  public PokerwarsController(PokerwarsService pokerwarsService) {
+    this.pokerwarsService = pokerwarsService;
+  }
 
   @PostMapping("play")
   public ResponseEntity<PokerAction> play(@RequestBody GameInfo gameInfo) {
@@ -63,7 +74,7 @@ public class PokerwarsController {
 
     // get the next move based on the strategy you selected in the application.yml
     LOG.info("Your bot is using strategy {}", pokerStrategy);
-    PokerAction nextMove = pokerStrategy.play(gameInfo);
+    PokerAction nextMove = pokerStrategy.play(gameInfo, strategyConfig);
     LOG.info("Your bot next move is {}", nextMove);
 
     return ResponseEntity.ok(nextMove);
@@ -83,6 +94,20 @@ public class PokerwarsController {
 
     if (type.toLowerCase().contains("wrong")) {
       LOG.error("Your bot has an issue. Check the error and fix it.");
+      System.exit(-1);
+    }
+  }
+
+  @GetMapping("subscribe")
+  @ResponseStatus(HttpStatus.OK)
+  public void subscribe() {
+    // This endpoint can be used by pokerwars.io to resubscribe your bot in exceptional situations
+    LOG.info("Trying to subscribe to pokerwars.io...");
+    try {
+      pokerwarsService.subscribeBotToPokerwars();
+      LOG.info("Subscribed successfully!");
+    } catch (Exception e) {
+      LOG.error("Unable to subscribe to pokerwars.io :( check the stacktrace for more info", e);
       System.exit(-1);
     }
   }
