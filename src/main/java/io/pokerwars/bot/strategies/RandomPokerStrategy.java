@@ -48,9 +48,11 @@ public class RandomPokerStrategy {
           return new Call();
         case 3:
           // random raise
-          Long minRaise = gameInfo.getMinRaise();
-          Long yourChips = gameInfo.getYourChips();
-          Long randomRaiseChips = getRandomNumber(minRaise, yourChips);
+          Long randomRaiseChips = getRandomNumberForRaise(gameInfo);
+
+          if(randomRaiseChips == 0) {
+            return new Call();
+          }
           return new Raise(randomRaiseChips);
         default:
           // default should never happen. Anyway fold.
@@ -67,6 +69,17 @@ public class RandomPokerStrategy {
     } else {
       return RandomUtil.randomLong(minBetOrRaise, yourChips);
     }
+  }
+
+  private static Long getRandomNumberForRaise(GameInfo gameInfo) {
+    Long yourChipsForRaise = gameInfo.getYourChips() - gameInfo.getChipsToCall();
+    Long bigBlindValue = gameInfo.getBigBlindValue();
+
+    if(bigBlindValue > yourChipsForRaise) {
+      return yourChipsForRaise;
+    }
+
+    return RandomUtil.randomLong(bigBlindValue, yourChipsForRaise);
   }
 
 }
