@@ -87,7 +87,7 @@ public class CardBasedStrategy {
       //with FULL_HOUSE, POKER or STRAIGHT_FLUSH
       if (cardsValue >= 7) {
         if (strategyConfig.getRaiseFactor() > 3) {
-          return new Raise(yourChips);
+          return new Raise(yourChipsForRaise);
         } else {
           return new Raise(
               Math.min(minRaise * (strategyConfig.getRaiseFactor() + 3), yourChipsForRaise));
