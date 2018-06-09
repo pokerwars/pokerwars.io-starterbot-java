@@ -1,5 +1,6 @@
 package io.pokerwars;
 
+import io.pokerwars.bot.strategies.StrategyConfig;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import org.springframework.boot.SpringApplication;
@@ -16,6 +17,11 @@ public class PokerwarsStarterBotApplication {
   @Bean
   public Client client() {
     return ClientBuilder.newClient();
+  }
+
+  @Bean
+  public StrategyConfig strategyConfig() {
+    return new StrategyConfig();
   }
 
 }
