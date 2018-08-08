@@ -21,7 +21,7 @@ import java.util.stream.Collector;
 
 public class HandUtil {
 
-  public static final Comparator<Card> HIGH_ACE_COMPARATOR = new AceComparator(false);
+  private static final Comparator<Card> HIGH_ACE_COMPARATOR = new AceComparator(false);
   private static final Comparator<Card> LOW_ACE_COMPARATOR = new AceComparator();
 
   private HandUtil() {
@@ -195,7 +195,6 @@ public class HandUtil {
         final Rank rank = previousCard.getRank();
         final Rank otherRank = card.getRank();
 
-        // carte dello stesso valore vengono aggiunte alla sequenza
         if (predecessorFunction.apply(rank, otherRank) || rank.compareTo(otherRank) == 0) {
           cardsInSequence.add(card);
         } else if (!isStraight()) {
