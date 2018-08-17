@@ -2,7 +2,6 @@ package io.pokerwars.bot.strategies;
 
 import static io.pokerwars.bot.strategies.HandStrength.computeHandStrength;
 
-import io.pokerwars.bot.model.in.Card;
 import io.pokerwars.bot.model.in.GameInfo;
 import io.pokerwars.bot.model.out.actions.Bet;
 import io.pokerwars.bot.model.out.actions.Call;
@@ -10,88 +9,51 @@ import io.pokerwars.bot.model.out.actions.Check;
 import io.pokerwars.bot.model.out.actions.Fold;
 import io.pokerwars.bot.model.out.actions.PokerAction;
 import io.pokerwars.bot.model.out.actions.Raise;
+import java.util.Optional;
 import java.util.Random;
-import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class CardBasedStrategy {
 
-  private static final Logger LOG = LoggerFactory.getLogger(CardBasedStrategy.class);
-
   static PokerAction play(GameInfo gameInfo, StrategyConfig strategyConfig) {
-    int cardsValue = doYouHaveGoodCards(gameInfo.getYourCards(), gameInfo.getTableCards());
+    int cardsStrength = computeHandStrength(
+        new PlayerHand(gameInfo.getYourCards(), gameInfo.getTableCards())).getHandValue();
+
     Long minBet = gameInfo.getMinBet();
     Long minRaise = gameInfo.getMinRaise();
     Long yourChips = gameInfo.getYourChips();
-    LOG.info("minRaise: " + minRaise + " yourChips: " + yourChips + " chips to call: " + gameInfo.getChipsToCall());
 
     if (gameInfo.canCheckOrBet()) {
-      if (cardsValue == 1 && !strategyConfig.isAggressivePlayer()) {
-        return new Check();
-      } else {
-        return new Bet(Math.min(minBet * cardsValue, yourChips));
-      }
+      return canCheckOrBetStrategy(strategyConfig, cardsStrength, minBet, yourChips);
     } else { // gameInfo.canRaise() is true here
       Long chipsToCall = gameInfo.getChipsToCall();
-      Long yourChipsForRaise = gameInfo.getYourChips() - chipsToCall;
+      Long yourChipsForRaise = yourChips - chipsToCall;
 
       //with CARD_HIGH or PAIR
-      if (cardsValue == 1 || cardsValue == 2) {
-        PokerAction bluff = bluffingStrategy(gameInfo, strategyConfig);
-        if (bluff != null) {
-          return bluff;
-        }
-        if (!strategyConfig.isAggressivePlayer()) {
-          return new Fold();
-        } else {
-          return new Call();
-        }
+      if (cardsStrength == 1 || cardsStrength == 2) {
+        return bluffingStrategy(gameInfo, strategyConfig)
+            .orElse(highCardOrPairStrategy(strategyConfig));
       }
 
       //with TWO_PAIRS
-      if (cardsValue == 3) {
-        PokerAction bluff = bluffingStrategy(gameInfo, strategyConfig);
-        if (bluff != null) {
-          return bluff;
-        }
-        if (strategyConfig.getAggressiveness() == 0) {
-          return new Fold();
-        } else if (strategyConfig.getRaiseFactor() == 0) {
-          return new Call();
-        } else {
-          return new Raise(Math.min(minRaise * strategyConfig.getRaiseFactor(), yourChipsForRaise));
-        }
+      if (cardsStrength == 3) {
+        return bluffingStrategy(gameInfo, strategyConfig)
+            .orElse(twoPairsStrategy(strategyConfig, minRaise, yourChipsForRaise));
       }
 
       //with THREE_OF_A_KIND
-      if (cardsValue == 4) {
-        PokerAction bluff = bluffingStrategy(gameInfo, strategyConfig);
-        if (bluff != null) {
-          return bluff;
-        }
-        if (strategyConfig.getRaiseFactor() == 0) {
-          return new Call();
-        } else {
-          return new Raise(
-              Math.min(minRaise * (strategyConfig.getRaiseFactor() + 1), yourChipsForRaise));
-        }
+      if (cardsStrength == 4) {
+        return bluffingStrategy(gameInfo, strategyConfig)
+            .orElse(threeOfAKindStrategy(strategyConfig, minRaise, yourChipsForRaise));
       }
 
       //with STRAIGHT or FLUSH
-      if (cardsValue == 5 || cardsValue == 6) {
-        return new Raise(
-            Math.min(minRaise * (strategyConfig.getRaiseFactor() + 2), yourChipsForRaise));
+      if (cardsStrength == 5 || cardsStrength == 6) {
+        return StraightOrFlushStrategy(strategyConfig, minRaise, yourChipsForRaise);
       }
 
       //with FULL_HOUSE, POKER or STRAIGHT_FLUSH
-      if (cardsValue >= 7) {
-        if (strategyConfig.getRaiseFactor() > 3) {
-          return new Raise(yourChipsForRaise);
-        } else {
-          return new Raise(
-              Math.min(minRaise * (strategyConfig.getRaiseFactor() + 3), yourChipsForRaise));
-        }
+      if (cardsStrength >= 7) {
+        return bestCardsStrategy(strategyConfig, minRaise, yourChipsForRaise);
       }
     }
 
@@ -99,34 +61,76 @@ public class CardBasedStrategy {
     return new Fold();
   }
 
-  private static PokerAction bluffingStrategy(GameInfo gameInfo, StrategyConfig strategyConfig) {
+  private static PokerAction bestCardsStrategy(StrategyConfig strategyConfig, Long minRaise,
+      Long yourChipsForRaise) {
+    if (strategyConfig.getRaiseFactor() > 3) {
+      return new Raise(yourChipsForRaise);
+    } else {
+      return new Raise(
+          Math.min(minRaise * (strategyConfig.getRaiseFactor() + 3), yourChipsForRaise));
+    }
+  }
+
+  private static Raise StraightOrFlushStrategy(StrategyConfig strategyConfig, Long minRaise,
+      Long yourChipsForRaise) {
+    return new Raise(
+        Math.min(minRaise * (strategyConfig.getRaiseFactor() + 2), yourChipsForRaise));
+  }
+
+  private static PokerAction threeOfAKindStrategy(StrategyConfig strategyConfig, Long minRaise,
+      Long yourChipsForRaise) {
+    if (strategyConfig.getRaiseFactor() == 1) {
+      return new Call();
+    } else {
+      return new Raise(
+          Math.min(minRaise * (strategyConfig.getRaiseFactor() + 1), yourChipsForRaise));
+    }
+  }
+
+  private static PokerAction twoPairsStrategy(StrategyConfig strategyConfig, Long minRaise,
+      Long yourChipsForRaise) {
+    if (strategyConfig.getAggressiveness() == 1) {
+      return new Fold();
+    } else if (strategyConfig.getRaiseFactor() <= 2) {
+      return new Call();
+    } else {
+      return new Raise(Math.min(minRaise * strategyConfig.getRaiseFactor(), yourChipsForRaise));
+    }
+  }
+
+  private static PokerAction highCardOrPairStrategy(StrategyConfig strategyConfig) {
+    return strategyConfig.isAggressivePlayer() ? new Call() : new Fold();
+  }
+
+  private static PokerAction canCheckOrBetStrategy(StrategyConfig strategyConfig, int cardsStrength,
+      Long minBet, Long yourChips) {
+    if (cardsStrength == 1 && strategyConfig.isNotAggressivePlayer()) {
+      return new Check();
+    } else {
+      return new Bet(Math.min(minBet * cardsStrength * strategyConfig.getRaiseFactor(), yourChips));
+    }
+  }
+
+  private static Optional<PokerAction> bluffingStrategy(GameInfo gameInfo,
+      StrategyConfig strategyConfig) {
     // 5 means 50% bluff
-    Integer bluffProbability = strategyConfig.getBluff() * 10;
+    Integer bluffConfig = strategyConfig.getBluff() * 10;
 
-    int random = new Random().nextInt(100);
+    int bluffPercentage = new Random().nextInt(100);
 
-    if (random <= bluffProbability) {
-      int bluff = new Random().nextInt(20);
+    if (bluffPercentage <= bluffConfig) {
+      int bluffAmount = new Random().nextInt(20);
       Long minRaise = gameInfo.getMinRaise();
       Long chipsToCall = gameInfo.getChipsToCall();
       Long yourChipsForRaise = gameInfo.getYourChips() - chipsToCall;
-      if (bluff > 15) {
-        LOG.info("super bluff");
-        return new Raise(yourChipsForRaise);
+      if (bluffAmount > 15) {
+        return Optional.of(new Raise(yourChipsForRaise));
       }
-      if (bluff > 10) {
-        LOG.info("bluff");
-        return new Raise(Math.min(minRaise * 10, yourChipsForRaise));
+      if (bluffAmount > 10) {
+        return Optional.of(new Raise(Math.min(minRaise * 10, yourChipsForRaise)));
       }
     }
-    return null;
-  }
-
-  private static int doYouHaveGoodCards(Set<Card> yourCards, Set<Card> tableCards) {
-    HandStrength handStrength = computeHandStrength(new PlayerHand(yourCards, tableCards));
-    LOG.info("My BOT cards are: " + handStrength.name());
-
-    return handStrength.getHandValue();
+    return Optional.empty();
   }
 
 }

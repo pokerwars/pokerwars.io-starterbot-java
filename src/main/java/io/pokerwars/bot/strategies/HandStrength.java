@@ -1,6 +1,5 @@
 package io.pokerwars.bot.strategies;
 
-import static com.google.common.collect.Sets.newHashSet;
 import static com.google.common.collect.Sets.newLinkedHashSet;
 import static io.pokerwars.bot.model.in.Card.Rank.ACE;
 import static io.pokerwars.bot.strategies.HandUtil.HIGH_ACE_COMPARATOR;
@@ -14,15 +13,12 @@ import static io.pokerwars.bot.strategies.HandUtil.getPairCount;
 import static io.pokerwars.bot.strategies.HandUtil.getSameSuitCards;
 import static io.pokerwars.bot.strategies.HandUtil.getSameSuitCount;
 import static java.util.Arrays.asList;
-import static java.util.Collections.singleton;
 
 import io.pokerwars.bot.model.in.Card;
 import io.pokerwars.bot.model.in.Card.Rank;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public enum HandStrength {
@@ -290,52 +286,6 @@ public enum HandStrength {
     return MATCHING_ORDER.stream()
         .filter(matchingOrder -> matchingOrder.match(playerHand.getCards())).findFirst()
         .orElseThrow(RuntimeException::new);
-  }
-
-  static Set<PlayerHand> getBestHand(final PlayerHand playerHand1, final PlayerHand playerHand2) {
-    final HandStrength handStrength1 = computeHandStrength(playerHand1);
-    final HandStrength handStrength2 = computeHandStrength(playerHand2);
-
-    final int rank = handStrength1.compareTo(handStrength2);
-    if (rank < 0) {
-      return singleton(playerHand2);
-    } else if (rank == 0) {
-      final int compare = handStrength1.compare(playerHand1, playerHand2);
-      if (compare == 0) {
-        return newHashSet(playerHand1, playerHand2);
-      }
-      return compare > 0 ? singleton(playerHand1) : singleton(playerHand2);
-    } else {
-      return singleton(playerHand1);
-    }
-  }
-
-  public static List<PlayerHand> getBestHand(final List<PlayerHand> playerHands) {
-    return playerHands.stream().collect(toPlayerHand());
-  }
-
-  private static Collector<PlayerHand, List<PlayerHand>, List<PlayerHand>> toPlayerHand() {
-    return Collector.of(ArrayList::new, (winningHands, playerHand) -> {
-      if (winningHands.isEmpty()) {
-        winningHands.add(playerHand);
-      } else {
-        final PlayerHand currentlyWinningHand = winningHands.get(0);
-        final Set<PlayerHand> bestHands = getBestHand(currentlyWinningHand, playerHand);
-        if (bestHands.contains(playerHand) && bestHands.contains(currentlyWinningHand)) {
-          // both hands are winning so we can simply add this to the list
-          winningHands.add(playerHand);
-        } else if (bestHands.contains(playerHand)) {
-          // only the new hand is winning
-          // so we need to update the winning hands with the new one only
-          winningHands.clear();
-          winningHands.add(playerHand);
-        }
-        // the existing winning hand won so do nothing
-      }
-    }, (c1, c2) -> {
-      c1.addAll(c2);
-      return c1;
-    });
   }
 
   protected abstract boolean match(final Set<Card> cards);

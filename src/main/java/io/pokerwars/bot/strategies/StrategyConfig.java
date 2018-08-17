@@ -18,7 +18,11 @@ public class StrategyConfig {
   }
 
   public boolean isAggressivePlayer() {
-    return getAggressiveness() > 3;
+    return getAggressiveness() >= 3;
+  }
+
+  public boolean isNotAggressivePlayer() {
+    return getAggressiveness() <= 2;
   }
 
   public Integer getBluff() {
