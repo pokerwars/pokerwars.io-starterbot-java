@@ -14,6 +14,8 @@ import java.util.Random;
 
 public class CardBasedStrategy {
 
+  private static final Random PRNG = new Random();
+
   static PokerAction play(GameInfo gameInfo, StrategyConfig strategyConfig) {
     int cardsStrength = computeHandStrength(
         new PlayerHand(gameInfo.getYourCards(), gameInfo.getTableCards())).getHandValue();
@@ -116,7 +118,7 @@ public class CardBasedStrategy {
     // 5 means 50% bluff
     Integer bluffConfig = strategyConfig.getBluff() * 10;
 
-    int bluffPercentage = new Random().nextInt(100);
+    int bluffPercentage = PRNG.nextInt(100);
 
     if (bluffPercentage <= bluffConfig) {
       int bluffAmount = new Random().nextInt(20);
