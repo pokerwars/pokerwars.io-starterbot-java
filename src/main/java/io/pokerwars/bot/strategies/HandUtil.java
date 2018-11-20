@@ -19,7 +19,7 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.stream.Collector;
 
-public class HandUtil {
+public final class HandUtil {
 
   private static final Comparator<Card> HIGH_ACE_COMPARATOR = new AceComparator(false);
   private static final Comparator<Card> LOW_ACE_COMPARATOR = new AceComparator();
