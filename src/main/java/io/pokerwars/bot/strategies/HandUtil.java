@@ -21,7 +21,7 @@ import java.util.stream.Collector;
 
 public final class HandUtil {
 
-  private static final Comparator<Card> HIGH_ACE_COMPARATOR = new AceComparator(false);
+  public static final Comparator<Card> HIGH_ACE_COMPARATOR = new AceComparator(false);
   private static final Comparator<Card> LOW_ACE_COMPARATOR = new AceComparator();
 
   private HandUtil() {
