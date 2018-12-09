@@ -8,9 +8,9 @@ plugins {
     id 'java'
     id 'eclipse'
     id 'idea'
-    id 'io.spring.dependency-management' version '1.0.5.RELEASE'
-    id 'org.springframework.boot' version '2.0.2.RELEASE'
-    id "com.github.ben-manes.versions" version "0.17.0"
+    id 'io.spring.dependency-management' version '1.0.6.RELEASE'
+    id 'org.springframework.boot' version '2.1.1.RELEASE'
+    id "com.github.ben-manes.versions" version "0.20.0"
 }
 
 sourceCompatibility = 1.8
@@ -25,17 +25,17 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-actuator'
     
-    compile 'com.google.guava:guava:25.1-jre'
+    compile 'com.google.guava:guava:27.0.1-jre'
     compile "org.glassfish.jersey.core:jersey-client:2.27"
     compile "org.glassfish.jersey.core:jersey-common:2.27"
     compile "org.glassfish.jersey.inject:jersey-hk2:2.27"
     compile "org.glassfish.jersey.media:jersey-media-json-jackson:2.27"
     
-    // java 9 and java 10 need these dependencies
+    // java >8 need these dependencies
     compile "javax.xml.bind:jaxb-api:2.3.0"
     compile "javax.activation:activation:1.1.1"
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.7'
+wrapper {
+    gradleVersion = "5.0"
 }
