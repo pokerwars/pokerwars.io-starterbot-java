@@ -47,7 +47,7 @@ public enum HandStrength {
     }
 
     protected int getHandValue() {
-      return 1;
+      return CARD_HIGH_STRENGTH;
     }
   },
   PAIR {
@@ -73,7 +73,7 @@ public enum HandStrength {
     }
 
     protected int getHandValue() {
-      return 2;
+      return PAIR_STRENGTH;
     }
   },
   TWO_PAIRS {
@@ -112,7 +112,7 @@ public enum HandStrength {
     }
 
     protected int getHandValue() {
-      return 3;
+      return TWO_PAIRS_STRENGTH;
     }
   },
   THREE_OF_A_KIND {
@@ -137,7 +137,7 @@ public enum HandStrength {
     }
 
     protected int getHandValue() {
-      return 4;
+      return THREE_OF_A_KIND_STRENGTH;
     }
   },
   STRAIGHT {
@@ -159,7 +159,7 @@ public enum HandStrength {
     }
 
     protected int getHandValue() {
-      return 5;
+      return STRAIGHT_STRENGTH;
     }
   },
   FLUSH {
@@ -177,7 +177,7 @@ public enum HandStrength {
     }
 
     protected int getHandValue() {
-      return 6;
+      return FLUSH_STRENGTH;
     }
   },
   FULL_HOUSE {
@@ -203,7 +203,7 @@ public enum HandStrength {
     }
 
     protected int getHandValue() {
-      return 7;
+      return FULL_HOUSE_STRENGTH;
     }
   },
   POKER {
@@ -227,7 +227,7 @@ public enum HandStrength {
     }
 
     protected int getHandValue() {
-      return 8;
+      return POKER_STRENGTH;
     }
   },
   STRAIGHT_FLUSH {
@@ -256,10 +256,19 @@ public enum HandStrength {
     }
 
     protected int getHandValue() {
-      return 9;
+      return STRAIGHT_FLUSH_STRENGTH;
     }
   };
 
+  public static final int CARD_HIGH_STRENGTH = 1;
+  public static final int PAIR_STRENGTH = 2;
+  public static final int TWO_PAIRS_STRENGTH = 3;
+  public static final int THREE_OF_A_KIND_STRENGTH = 4;
+  public static final int STRAIGHT_STRENGTH = 5;
+  public static final int FLUSH_STRENGTH = 6;
+  public static final int FULL_HOUSE_STRENGTH = 7;
+  public static final int POKER_STRENGTH = 8;
+  public static final int STRAIGHT_FLUSH_STRENGTH = 9;
   private static final Set<HandStrength> MATCHING_ORDER = newLinkedHashSet(asList(STRAIGHT_FLUSH,
       POKER, FULL_HOUSE, FLUSH, STRAIGHT, THREE_OF_A_KIND, TWO_PAIRS, PAIR, CARD_HIGH));
 

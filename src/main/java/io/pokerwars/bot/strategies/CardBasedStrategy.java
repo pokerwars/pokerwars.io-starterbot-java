@@ -1,7 +1,5 @@
 package io.pokerwars.bot.strategies;
 
-import static io.pokerwars.bot.strategies.HandStrength.computeHandStrength;
-
 import io.pokerwars.bot.model.in.GameInfo;
 import io.pokerwars.bot.model.out.actions.Bet;
 import io.pokerwars.bot.model.out.actions.Call;
@@ -11,6 +9,15 @@ import io.pokerwars.bot.model.out.actions.PokerAction;
 import io.pokerwars.bot.model.out.actions.Raise;
 import java.util.Optional;
 import java.util.Random;
+
+import static io.pokerwars.bot.strategies.HandStrength.CARD_HIGH_STRENGTH;
+import static io.pokerwars.bot.strategies.HandStrength.PAIR_STRENGTH;
+import static io.pokerwars.bot.strategies.HandStrength.TWO_PAIRS_STRENGTH;
+import static io.pokerwars.bot.strategies.HandStrength.THREE_OF_A_KIND_STRENGTH;
+import static io.pokerwars.bot.strategies.HandStrength.STRAIGHT_STRENGTH;
+import static io.pokerwars.bot.strategies.HandStrength.FLUSH_STRENGTH;
+import static io.pokerwars.bot.strategies.HandStrength.FULL_HOUSE_STRENGTH;
+import static io.pokerwars.bot.strategies.HandStrength.computeHandStrength;
 
 public class CardBasedStrategy {
 
@@ -30,31 +37,26 @@ public class CardBasedStrategy {
       Long chipsToCall = gameInfo.getChipsToCall();
       Long yourChipsForRaise = yourChips - chipsToCall;
 
-      //with CARD_HIGH or PAIR
-      if (cardsStrength == 1 || cardsStrength == 2) {
+      if (cardsStrength == CARD_HIGH_STRENGTH || cardsStrength == PAIR_STRENGTH) {
         return bluffingStrategy(gameInfo, strategyConfig)
             .orElse(highCardOrPairStrategy(strategyConfig));
       }
 
-      //with TWO_PAIRS
-      if (cardsStrength == 3) {
+      if (cardsStrength == TWO_PAIRS_STRENGTH) {
         return bluffingStrategy(gameInfo, strategyConfig)
             .orElse(twoPairsStrategy(strategyConfig, minRaise, yourChipsForRaise));
       }
 
-      //with THREE_OF_A_KIND
-      if (cardsStrength == 4) {
+      if (cardsStrength == THREE_OF_A_KIND_STRENGTH) {
         return bluffingStrategy(gameInfo, strategyConfig)
             .orElse(threeOfAKindStrategy(strategyConfig, minRaise, yourChipsForRaise));
       }
 
-      //with STRAIGHT or FLUSH
-      if (cardsStrength == 5 || cardsStrength == 6) {
+      if (cardsStrength == STRAIGHT_STRENGTH || cardsStrength == FLUSH_STRENGTH) {
         return StraightOrFlushStrategy(strategyConfig, minRaise, yourChipsForRaise);
       }
 
-      //with FULL_HOUSE, POKER or STRAIGHT_FLUSH
-      if (cardsStrength >= 7) {
+      if (cardsStrength >= FULL_HOUSE_STRENGTH) {
         return bestCardsStrategy(strategyConfig, minRaise, yourChipsForRaise);
       }
     }
