@@ -35,5 +35,15 @@ pokerwars.io-starterbot-java> gradlew bootRun
 
 The bot will try to subscribe to pokerwars.io when it starts up. If no errors happens, it will start playing straightaway, otherwise you should see an error. The most common is that we cannot see your bot, please double check [your bot is visible from the internet](http://canyouseeme.org/) and [you have configured your router correctly](https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/). If you do not have access to your router or your bot is behind a firewall, try [ngrok](https://ngrok.com/).
 
+### Playing on Glitch.com?
+It's easy:
+
+- Import this repo into a new Glitch project
+- Check the Live App URL for your project under `Share` (it will look like https://<MY_POKERWARS_BOT>.glitch.me)
+- Update your application.yml file as described above
+- Start remixing!
+
+Have fun!
+
 ## Extending this bot
 If something is not clear in this code, refer to also to [our documentation](https://www.pokerwars.io/docs) for the structure and content of the data we send to your bot. How you choose to manipulate that information to inform your bot's strategy is up to you!
