@@ -1,5 +1,8 @@
 # Created by https://www.gitignore.io/api/java,eclipse,intellij,gradle
 
+### VSCode ###
+.vscode/
+
 ### Eclipse ###
 
 .metadata
