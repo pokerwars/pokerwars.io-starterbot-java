@@ -1,5 +1,8 @@
 # Created by https://www.gitignore.io/api/java,eclipse,intellij,gradle
 
+### VSCode ###
+.vscode/
+
 ### Eclipse ###
 
 .metadata
@@ -132,6 +135,9 @@ hs_err_pid*
 ### Gradle ###
 .gradle
 /build/
+
+# Maven
+/target/
 
 # Ignore Gradle GUI config
 gradle-app.setting

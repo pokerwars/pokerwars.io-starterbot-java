@@ -1,0 +1,6 @@
+{
+  "start": "bash mvnw spring-boot:run",
+  "watch": {
+    "throttle": 1000
+  }
+}
