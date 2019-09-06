@@ -6,7 +6,7 @@ pokerwars:
         username: your-username
         token: your-token
         # make sure your bot can be seen from external at the IP and port you specify below, so pokerwars.io can talk to him/her.
-        # this is an useful service to double check this: http://canyouseeme.org/ . Bot default port is `8090`, but you can change this just above in this file
+        # this is an useful service to double check this: http://canyouseeme.org/ . Bot default port is `3000`, but you can change this just above in this file
         endpoint: your-endpoint
         # options are ALWAYS_FOLD, ALWAYS_CALL or RANDOM, implement your own strategy!
         # to activate the parametrised bot, use type CARD_BASED
