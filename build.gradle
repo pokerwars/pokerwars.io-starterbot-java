@@ -11,7 +11,7 @@ plugins {
     id 'maven'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'org.springframework.boot' version '2.1.8.RELEASE'
-    id 'com.github.ben-manes.versions' version '0.24.0'
+    id 'com.github.ben-manes.versions' version '0.25.0'
 }
 
 sourceCompatibility = 1.8
@@ -27,10 +27,10 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-actuator'
     
     compile 'com.google.guava:guava:28.1-jre'
-    compile 'org.glassfish.jersey.core:jersey-client:2.29'
-    compile 'org.glassfish.jersey.core:jersey-common:2.29'
-    compile 'org.glassfish.jersey.inject:jersey-hk2:2.29'
-    compile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.29'
+    compile 'org.glassfish.jersey.core:jersey-client:2.29.1'
+    compile 'org.glassfish.jersey.core:jersey-common:2.29.1'
+    compile 'org.glassfish.jersey.inject:jersey-hk2:2.29.1'
+    compile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.29.1'
     
     // java >8 need these dependencies
     compile 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
