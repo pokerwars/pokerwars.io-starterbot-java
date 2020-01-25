@@ -9,8 +9,8 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven'
-    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
-    id 'org.springframework.boot' version '2.2.2.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'org.springframework.boot' version '2.2.4.RELEASE'
     id 'com.github.ben-manes.versions' version '0.27.0'
 }
 
@@ -26,11 +26,11 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-actuator'
     
-    compile 'com.google.guava:guava:28.1-jre'
-    compile 'org.glassfish.jersey.core:jersey-client:2.29.1'
-    compile 'org.glassfish.jersey.core:jersey-common:2.29.1'
-    compile 'org.glassfish.jersey.inject:jersey-hk2:2.29.1'
-    compile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.29.1'
+    compile 'com.google.guava:guava:28.2-jre'
+    compile 'org.glassfish.jersey.core:jersey-client:2.30'
+    compile 'org.glassfish.jersey.core:jersey-common:2.30'
+    compile 'org.glassfish.jersey.inject:jersey-hk2:2.30'
+    compile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.30'
     
     // java >8 need these dependencies
     compile 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
@@ -38,6 +38,6 @@ dependencies {
 }
 
 wrapper {
-    gradleVersion = '6.0.1'
+    gradleVersion = '6.1.1'
     distributionType = Wrapper.DistributionType.ALL
 }
