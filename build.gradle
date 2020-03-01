@@ -10,8 +10,8 @@ plugins {
     id 'idea'
     id 'maven'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-    id 'org.springframework.boot' version '2.2.4.RELEASE'
-    id 'com.github.ben-manes.versions' version '0.27.0'
+    id 'org.springframework.boot' version '2.2.5.RELEASE'
+    id 'com.github.ben-manes.versions' version '0.28.0'
 }
 
 sourceCompatibility = 1.8
@@ -38,6 +38,6 @@ dependencies {
 }
 
 wrapper {
-    gradleVersion = '6.1.1'
+    gradleVersion = '6.2.1'
     distributionType = Wrapper.DistributionType.ALL
 }
